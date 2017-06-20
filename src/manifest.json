@@ -1,0 +1,42 @@
+{
+  "manifest_version": 2,
+  "name": "Google Sheets Extension",
+  "description": "",
+  "version": "1.0",
+  "icons": {
+    "16": "images/empty_16.png",
+    "32": "images/empty_32.png",
+    "48": "images/empty_48.png",
+    "64": "images/empty_64.png",
+    "128": "images/empty_128.png"
+  },
+  "content_security_policy":"script-src 'self' https://apis.google.com https://sheets.googleapis.com; object-src 'self'",
+  "content_scripts": [{
+    "matches": [
+      "*://*/*"
+    ],
+    "js": [ "content_scripts/end.js"],
+    "run_at": "document_end"
+  }],
+  "permissions": [
+    "http://*/",
+    "https://*/",
+    "identity"
+  ],
+  "oauth2": {
+    "client_id": "695856259469-t4ghrktvu6390brsua9ihg438nfo5fo3.apps.googleusercontent.com",
+    "scopes": ["https://www.googleapis.com/auth/spreadsheets.readonly"],
+    "key": "AIzaSyC8_iaQV4ql8q7m8_9zS6dVh-O-Nkxd_jo"
+  },
+  "browser_action": {
+    "default_icon": {
+      "16": "images/empty_16.png",
+      "32": "images/empty_32.png",
+      "48": "images/empty_48.png",
+      "64": "images/empty_64.png",
+      "128": "images/empty_128.png"
+    },
+    "default_title": "Google Sheets Extension",
+    "default_popup": "popup/popup.html"
+  }
+}
