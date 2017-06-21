@@ -25,8 +25,7 @@
   ],
   "oauth2": {
     "client_id": "695856259469-t4ghrktvu6390brsua9ihg438nfo5fo3.apps.googleusercontent.com",
-    "scopes": ["https://www.googleapis.com/auth/spreadsheets.readonly"],
-    "key": "AIzaSyC8_iaQV4ql8q7m8_9zS6dVh-O-Nkxd_jo"
+    "scopes": ["https://www.googleapis.com/auth/spreadsheets.readonly"]
   },
   "browser_action": {
     "default_icon": {

@@ -1,88 +1,105 @@
 // from https://developers.google.com/sheets/api/quickstart/js
 // !!! For web-application type need verify project or add to group 'Risky Access Permissions By Unreviewed Apps' (https://groups.google.com/forum/#!forum/risky-access-by-unreviewed-apps)
 
-// Client ID and API key from the Developer Console
-// var CLIENT_ID = '695856259469-kn1d6mp1r140cpsc7vh2jgjc238c9vli.apps.googleusercontent.com';
-var CLIENT_ID = '695856259469-t4ghrktvu6390brsua9ihg438nfo5fo3.apps.googleusercontent.com';
-
-// Array of API discovery doc URLs for APIs used by the quickstart
-var DISCOVERY_DOCS = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];
-
-// Authorization scopes required by the API; multiple scopes can be
-// included, separated by spaces.
-var SCOPES = "https://www.googleapis.com/auth/spreadsheets.readonly";
-// var SCOPES = "https://www.googleapis.com/auth/drive";
-
 var authorizeButton = document.getElementById('authorize-button');
-var signoutButton = document.getElementById('signout-button');
+var signOutButton = document.getElementById('signout-button');
+var accessToken = "";
 
-/**
- *  On load, called to load the auth2 library and API client library.
- */
+document.addEventListener("DOMContentLoaded", function() {
+  handleClientLoad();
+});
+
+authorizeButton.addEventListener("click", function() {
+  auth()
+  .then(function(token) {
+    console.log(token, "tokkk");
+  })
+  .catch(function(error) {
+    console.log(error, "errorrrrrrrrrr");
+  });
+});
+
+signOutButton.addEventListener("click", function() {
+  signOut();
+});
+
+
 function handleClientLoad() {
-  // gapi.load('client:auth2', handleSignoutClick);
+  return Promise.resolve()
+  .then(function() {
+    return checkAuth();
+  })
+  // .then(function(token) {
+  //   if (token) return token;
+  //   // else return auth();
+  //   else throw "need auth";
+  // })
+  .then(function(token) {
+    accessToken = token; // global...
+    return loadSheetsApi(token);
+  })
+  .then(function() {
+    listMajors();
+  })
+  .catch(function(error) {
+    console.log(error, "error");
+  });
+}
 
-
-  auth(true, function (token) {
-    // var xhr = new XMLHttpRequest();
-    // xhr.open('GET', 'https://accounts.google.com/o/oauth2/revoke?token=' + token);
-    // xhr.send();
-    //
-    // chrome.identity.removeCachedAuthToken({ token: token });
-    // gapi.load('client:sheets', 'v4', listMajors);
+function loadSheetsApi(token) {
+  return new Promise(function(resolve, reject) {
     gapi.load('client', function() {
       // gapi.client.setApiKey('AIzaSyC8_iaQV4ql8q7m8_9zS6dVh-O-Nkxd_jo');
       gapi.client.setToken({ access_token: token });
-      gapi.client.load('sheets', 'v4', listMajors);
-      console.log("load client");
-      // gapi.client.load("https://sheets.googleapis.com/$discovery/rest?version=v4").then(listMajors);
-
-      // gapi.client.init({
-      //   discoveryDocs: DISCOVERY_DOCS,
-      //   clientId: CLIENT_ID,
-      //   scope: SCOPES
-      // })
-      // .then(
-      //   listMajors,
-      //   function(error) {
-      //     console.log(error, "error");
-      //   }
-      // );
-
+      gapi.client.load('sheets', 'v4', resolve);
     });
-    // listMajors();
   });
+}
 
+function signOut(accessToken222222222) {
+  console.log(accessToken, "accessToken");
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', 'https://accounts.google.com/o/oauth2/revoke?token=' + accessToken);
+  xhr.send();
 
-
-  // gapi.load('client:auth2', function() {
-  //   login({}, function () {
-  //     // Listen for sign-in state changes.
-  //     console.log("then");
-  //     gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
-  //
-  //     // Handle the initial sign-in state.
-  //     console.log(gapi.auth2.getAuthInstance().isSignedIn.get(), "gapi.auth2.getAuthInstance().isSignedIn.get()");
-  //     updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-  //     authorizeButton.onclick = handleAuthClick;
-  //     signoutButton.onclick = handleSignoutClick;
-  //   });
-  // });
+  chrome.identity.removeCachedAuthToken({ token: accessToken });
 }
 
 
-function auth(interactive, opt_callback) {
-  try {
-    chrome.identity.getAuthToken({interactive: interactive}, function(token) {
-      console.log(token, "token");
+function auth() {
+  return new Promise(function(resolve, reject) {
+    chrome.identity.getAuthToken({ interactive: true }, function(token) {
+      console.log(token, "token 1");
+      if (chrome.runtime.lastError) console.log(chrome.runtime.lastError, "chrome.runtime.lastError 1");
       if (token) {
-        // this.accessToken = token;
-        opt_callback && opt_callback(token);
+        resolve(token);
+      } else {
+        // chrome.identity.getAuthToken({ interactive: false }, function(token) { // HACK call getAuthToken twice when new auth
+        //   console.log(token, "token 2");
+        //   if (chrome.runtime.lastError) console.log(chrome.runtime.lastError, "chrome.runtime.lastError 2");
+        //
+        //   if (token) resolve(token);
+        //   else reject("getAuthToken don't return valid token");
+        // });
+
+        checkAuth() // HACK call getAuthToken twice when new auth, in second with interactive: false
+        .then(resolve)
+        .catch(reject);
+
       }
-    }.bind(this));
-  } catch(e) {
-    console.log(e);
-  }
+    });
+  });
+}
+
+function checkAuth() {
+  return new Promise(function(resolve, reject) {
+    chrome.identity.getAuthToken({ interactive: false }, function(token) {
+      if (chrome.runtime.lastError) reject(chrome.runtime.lastError);
+      resolve(token);
+      // if (token) resolve(token);
+      // else reject("need auth");
+    });
+  });
 }
 
 
@@ -261,11 +278,14 @@ function listMajors() {
       appendPre('No data found.');
     }
   }, function(response) {
-    appendPre('Error: ' + response.result.error.message);
+    console.log(response, "response");
+    if (response.status === 403) {
+      // return auth()
+      // .then(function() {
+      //   listMajors();
+      // });
+    } else {
+      appendPre('Error: ' + response.result.error.message);
+    }
   });
 }
-
-document.addEventListener("DOMContentLoaded", function() {
-  console.log("xyu");
-  handleClientLoad();
-});
