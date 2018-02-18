@@ -1,0 +1,54 @@
+{
+   "background": {
+      "page": "background.html",
+      "script": "background.js"
+   },
+   "browser_action": {
+      "default_icon": {
+         "19": "icon19.png",
+         "38": "icon76.png"
+      },
+      "default_popup": "popup.html",
+      "default_title": "Citable"
+   },
+   "commands": {
+      "_execute_browser_action": {
+         "suggested_key": {
+            "chromeos": "Ctrl+Shift+X",
+            "linux": "Ctrl+Shift+X",
+            "mac": "Command+Shift+X",
+            "windows": "Ctrl+Shift+X"
+         }
+      }
+   },
+   "content_scripts": [ {
+      "css": [ "css/spreadsheet.css" ],
+      "js": [ "js/jquery-1.7.2.min.js", "js/spreadsheet.js" ],
+      "matches": [ "*://docs.google.com/spreadsheet/*" ],
+      "run_at": "document_end"
+   } ],
+   "content_security_policy": "script-src 'self' https://ssl.google-analytics.com https://apis.google.com/; object-src 'self'",
+   "description": "Save citable quotes and notes from the web into Google spreadsheets.",
+   "icons": {
+      "128": "icon128.png",
+      "16": "icon16.png",
+      "256": "icon256.png",
+      "48": "icon48.png",
+      "96": "icon96.png"
+   },
+   "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDAWST4CzoIlg0pwYOZ4tMGhZj8h+tAfyLmLrmAFNfdfGJz/CJ3LbJlOse8NoLtL+chV+DuhGiStLepn6tzXYe+L8JUHov/ztDeOArzUjmNeG2UpSX8kU8hcGhtnqvlWmto+0OgJytgVYMKnbo2zolI3s+UKfwP1S6D5T0KoyKWowIDAQAB",
+   "manifest_version": 2,
+   "minimum_chrome_version": "29",
+   "name": "Citable",
+   "oauth2": {
+      "client_id": "1034066493115-63ktpb72dijlg29fsr4d4q40uotkd1a1.apps.googleusercontent.com",
+      "scopes": [ "https://www.googleapis.com/auth/drive", "https://spreadsheets.google.com/feeds", "https://docs.google.com/feeds" ]
+   },
+   "offline_enabled": false,
+   "options_page": "options.html",
+   "permissions": [ "tabs", "storage", "identity", "http://*/*", "https://*/*", "https://docs.google.com/feeds/*", "https://spreadsheets.google.com/feeds/lists/*", "https://www.google.com/accounts/OAuthGetRequestToken", "https://www.google.com/accounts/OAuthAuthorizeToken", "https://www.google.com/accounts/OAuthGetAccessToken", "https://ssl.gstatic.com/", "https://www.googleapis.com/", "https://accounts.google.com/" ],
+   "short_name": "Citable",
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "2.1.4",
+   "web_accessible_resources": [  ]
+}
