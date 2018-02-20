@@ -3,6 +3,17 @@ var Jimp = require("jimp");
 
 module.exports = {
   plugins: [
+    // new class {
+    new Object({ // custom task: resize image and copy them
+      apply(compiler) {
+        compiler.plugin("emit", async function(compilation, callback) {
+          var image = await Jimp.read('src/image.jpg');
+          image.resize(500, Jimp.AUTO).write('dist/image-500.jpg');
+          image.resize(256, Jimp.AUTO).write('dist/image-256.jpg');
+          callback();
+        });
+      }
+    })
     // new CopyWebpackPlugin([
     //   {
     //     from: 'src/image.jpg',
@@ -29,19 +40,10 @@ module.exports = {
     //     //     console.error(err, "err");
     //     //   });
     //     // }
+    //
     //   }
     // ]),
-    function() {
-      Jimp.read('src/image.jpg')
-      .then(function(image) {
-        image.resize(500, Jimp.AUTO)     // resize
-        .write('dist/image-500.jpg'); // save
 
-        return image.resize(256, Jimp.AUTO)     // resize
-        // .quality(60)                 // set JPEG quality
-        // .greyscale()                 // set greyscale
-        .write('dist/image-256.jpg'); // save
-      });
-    }
-  ],
+
+  ]
 };
