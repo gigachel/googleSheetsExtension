@@ -1,19 +1,33 @@
 var CopyWebpackPlugin = require('copy-webpack-plugin');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 var Jimp = require("jimp");
 
 module.exports = {
   plugins: [
+    new CopyWebpackPlugin([{
+      from: 'src/manifest.json',
+      to: 'manifest.json'
+    }]),
     // new class {
     new Object({ // custom task: resize image and copy them
       apply(compiler) {
         compiler.plugin("emit", async function(compilation, callback) {
-          var image = await Jimp.read('src/image.jpg');
-          image.resize(500, Jimp.AUTO).write('dist/image-500.jpg');
-          image.resize(256, Jimp.AUTO).write('dist/image-256.jpg');
+          var image = await Jimp.read('src/images/empty.png');
+          image.resize(128, Jimp.AUTO).write('dist/images/empty-128.png');
+          image.resize(64, Jimp.AUTO).write('dist/images/empty-64.png');
+          image.resize(48, Jimp.AUTO).write('dist/images/empty-48.png');
+          image.resize(32, Jimp.AUTO).write('dist/images/empty-32.png');
+          image.resize(16, Jimp.AUTO).write('dist/images/empty-16.png');
           callback();
         });
       }
     })
+    // new HtmlWebpackPlugin()
+    // new HtmlWebpackPlugin({
+    //   filename: 'test.html',
+    //   // title: 'Custom template',
+    //   template: 'index.html', // Load a custom template (lodash by default see the FAQ for details)
+    // })
     // new CopyWebpackPlugin([
     //   {
     //     from: 'src/image.jpg',

@@ -7,7 +7,7 @@ http.createServer(function (request, response) {
   console.log('request ', request.url);
 
   var filePath = '.' + request.url;
-  if (filePath == './') filePath = '../public/popup.html';
+  if (filePath == './') filePath = './dist/index.html';
   var extname = String(path.extname(filePath)).toLowerCase();
   var mimeTypes = {
     '.html': 'text/html',
@@ -54,4 +54,4 @@ http.createServer(function (request, response) {
   });
 
 }).listen(port);
-console.log('Server running at http://127.0.0.1:' + port);
+console.log('Server running at http://localhost:' + port);
