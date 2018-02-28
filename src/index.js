@@ -11,7 +11,7 @@ import App from './App.vue';
 
 // Vue.use(ElementUI, { locale: ruLocale });
 
-new Vue({
+new Vue({  
   el: '#app',
   // render: h => h(App),
   render: function(createElement) {
