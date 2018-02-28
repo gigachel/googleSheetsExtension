@@ -1,8 +1,29 @@
+var path = require('path');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var Jimp = require("jimp");
 
 module.exports = {
+  // entry: './src/index.js',
+  // output: {
+  //   filename: 'main.js',
+  //   path: path.resolve(__dirname, 'dist')
+  // },
+  module: {
+    rules: [{
+        test: /\.vue$/,
+        loader: 'vue-loader',
+        // options: {
+        //   loaders: {
+        //     js: 'babel-loader!eslint-loader'
+        //   }
+        // }
+      }, {
+        // test: /\.js$/,
+        // loader: 'babel-loader',
+        // exclude: /node_modules/
+      }]
+  },
   plugins: [
     new CopyWebpackPlugin([{
       from: 'src/manifest.json',
@@ -59,5 +80,7 @@ module.exports = {
     // ]),
 
 
-  ]
+  ],
+  // devtool: '#eval-source-map',
+  // devtool: 'inline-source-map',
 };

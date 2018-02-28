@@ -6,8 +6,8 @@ var port = process.argv[2] || 8000;
 http.createServer(function (request, response) {
   console.log('request ', request.url);
 
-  var filePath = '.' + request.url;
-  if (filePath == './') filePath = './dist/index.html';
+  var filePath = './dist/' + request.url;
+  if (request.url == '/') filePath = './dist/index.html';
   var extname = String(path.extname(filePath)).toLowerCase();
   var mimeTypes = {
     '.html': 'text/html',
