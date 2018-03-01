@@ -4,7 +4,7 @@ module.exports = {
     'eslint:recommended',
     // 'plugin:vue/essential',
     // "plugin:vue/base"
-    // "plugin:vue/recommended"
+    "plugin:vue/recommended"
   ],
   env: {
     "es6": true,

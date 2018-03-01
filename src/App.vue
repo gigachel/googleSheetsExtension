@@ -20,9 +20,8 @@
 
   var authorizeButton = document.getElementById('authorize-button');
   var signoutButton = document.getElementById('signout-button');
-
-
-  handleClientLoad();
+ggee
+  handleClientLoad()
 
   /**
    *  On load, called to load the auth2 library and API client library.
